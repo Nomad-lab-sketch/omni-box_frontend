@@ -1,0 +1,10 @@
+{
+  "name": "@omni-box/omni-box-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@omni-box/omni-box"
+    ]
+  }
+}
