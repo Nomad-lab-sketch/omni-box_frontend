@@ -60,7 +60,7 @@ export function OmniLayoutComponent(): React.JSX.Element {
         </Link>
         <Menu theme="dark" items={items} selectedKeys={[location.pathname]} />
       </Sider>
-      <Layout>
+      <Layout className='flex flex-col gap-2'>
         <Header className="p-0 pl-4 pr-4">
           <Button
             className="h-full text-base"
@@ -70,7 +70,7 @@ export function OmniLayoutComponent(): React.JSX.Element {
             onClick={() => setCollapsed(!collapsed)}
           />
         </Header>
-        <Content className="m-0 ml-4 mr-4">
+        <Content className="flex flex-col gap-5 m-0 ml-4 mr-4">
           <Breadcrumb className="pt-1 pb-1" items={breadCrumbItem} />
           <Outlet />
         </Content>

@@ -1,5 +1,7 @@
+import { SysCoreConfig } from '@omni-box/sys-core';
 import { OmniLayoutComponent, RouterPaths, TOKEN } from '@omni-box/sys-shared';
 import { ConfigProvider, theme, ThemeConfig } from 'antd';
+import { createContext } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { mainRoute } from './main/main.component';
@@ -23,14 +25,20 @@ const themeConfig: ThemeConfig = {
   },
 };
 
+const sysCoreConfig = new SysCoreConfig({ env: '', goBackRoute: '/', errorRoute: '' });
+
+const SysCoreConfigContext = createContext(sysCoreConfig);
+
 const router = createBrowserRouter([
   {
     path: RouterPaths.MAIN,
     Component: () => {
       return (
-        <ConfigProvider theme={themeConfig}>
-          <OmniLayoutComponent />
-        </ConfigProvider>
+        <SysCoreConfigContext.Provider value={sysCoreConfig}>
+          <ConfigProvider theme={themeConfig}>
+            <OmniLayoutComponent />
+          </ConfigProvider>
+        </SysCoreConfigContext.Provider>
       );
     },
     children: [mainRoute, todoListRoute],
