@@ -1,4 +1,5 @@
 import nx from '@nx/eslint-plugin';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default [
   ...nx.configs['flat/base'],
@@ -28,6 +29,12 @@ export default [
           ],
         },
       ],
+      // Добавляем сортировку импортов
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+    },
+    plugins: {
+      'simple-import-sort': simpleImportSort,
     },
   },
   {
@@ -41,7 +48,8 @@ export default [
       '**/*.cjs',
       '**/*.mjs',
     ],
-    // Override or add rules here
-    rules: {},
+    rules: {
+      // здесь можно переопределить что-то дальше
+    },
   },
 ];

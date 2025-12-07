@@ -4,10 +4,13 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/omni-box-e2e"
+      "path": "./apps/omni-box"
     },
     {
-      "path": "./apps/omni-box"
+      "path": "./libs/sys-core"
+    },
+    {
+      "path": "./libs/sys-shared"
     }
   ]
 }
