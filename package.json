@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "nx-serve:omni-box": "npx nx serve omni-box"
+    "nx-serve:omni-box": "npx nx serve omni-box --configuration=development"
   },
   "private": true,
   "dependencies": {

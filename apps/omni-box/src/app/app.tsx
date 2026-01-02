@@ -25,7 +25,18 @@ const themeConfig: ThemeConfig = {
   },
 };
 
-const sysCoreConfig = new SysCoreConfig({ env: '', goBackRoute: '/', errorRoute: '' });
+const env = {
+  buildTarget: import.meta.env.VITE_APP_BUILD_TARGET,
+  backend: {
+    api: import.meta.env.VITE_BACKEND_API_URL,
+  },
+};
+
+const sysCoreConfig = new SysCoreConfig({
+  env: env,
+  goBackRoute: import.meta.env.VITE_BACK_ROUTE,
+  errorRoute: import.meta.env.VITE_ERROR_ROUTE,
+});
 
 const SysCoreConfigContext = createContext(sysCoreConfig);
 

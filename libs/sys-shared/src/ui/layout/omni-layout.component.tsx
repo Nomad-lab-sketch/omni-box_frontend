@@ -15,6 +15,16 @@ const items: Required<MenuProps>['items'][number][] = [
     label: <Link to={RouterPaths.TODO_LIST}>Список задач</Link>,
     icon: <PieChartOutlined />,
   },
+  {
+    key: `/${RouterPaths.HELL_HOUND}`,
+    label: <Link to={RouterPaths.HELL_HOUND}>Цербер</Link>,
+    icon: <PieChartOutlined />,
+  },
+  {
+    key: `/${RouterPaths.AAMN}`,
+    label: <Link to={RouterPaths.AAMN}>Распределенная адаптивная сеть памяти</Link>,
+    icon: <PieChartOutlined />,
+  },
 ];
 
 export function OmniLayoutComponent(): React.JSX.Element {

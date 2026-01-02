@@ -1,57 +1,59 @@
-import { ViewModelContract } from '@omni-box/sys-core';
+import { useSysDataSourceWithLifecycle, ViewModelContract } from '@omni-box/sys-core';
 import { TableProps, Tag } from 'antd';
 
-interface ITaskDTO {
-  readonly id: string;
-  name: string;
-  tags: string[];
-}
+import { TodoListDTO } from './dto/todo-list.dto';
 
 export interface UseTodoListViewModelState {
-  column_config: TableProps<ITaskDTO>['columns'];
-  table_data: ITaskDTO[];
+  column_config: TableProps<TodoListDTO>['columns'];
+  table_data: TodoListDTO[];
 }
 
-export function useTodoListViewModel(): ViewModelContract<UseTodoListViewModelState> {
-  const column_config: TableProps<ITaskDTO>['columns'] = [
-    {
-      key: 'name',
-      dataIndex: 'name',
-      title: 'Задача',
+const column_config: TableProps<TodoListDTO>['columns'] = [
+  {
+    key: 'name',
+    dataIndex: 'name',
+    title: 'Задача',
+  },
+  {
+    key: 'tags',
+    dataIndex: 'tags',
+    title: 'Теги',
+    render: (_, { id, tags }) => {
+      return (
+        <div className="flex gap-1">
+          {tags.map((t) => (
+            <Tag key={id + t}>{t}</Tag>
+          ))}
+        </div>
+      );
     },
-    {
-      key: 'tags',
-      dataIndex: 'tags',
-      title: 'Теги',
-      render: (_, { id, tags }) => {
-        return (
-          <div className="flex gap-1">
-            {tags.map((t) => (
-              <Tag key={id + t}>{t}</Tag>
-            ))}
-          </div>
-        );
-      },
-    },
-  ];
+  },
+];
 
-  const table_data: ITaskDTO[] = [
-    {
-      id: crypto.randomUUID(),
-      name: 'Задача 1',
-      tags: ['1', '2'],
-    },
-    {
-      id: crypto.randomUUID(),
-      name: 'Задача 2',
-      tags: ['1', '2'],
-    },
-  ];
+const table_data: TodoListDTO[] = [
+  {
+    id: crypto.randomUUID(),
+    name: 'Задача 1',
+    tags: ['1', '2'],
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Задача 2',
+    tags: ['1', '2'],
+  },
+];
+
+export function useTodoListViewModel(): ViewModelContract<UseTodoListViewModelState> {
+  const data = useSysDataSourceWithLifecycle<TodoListDTO[]>((params) => Promise.resolve<TodoListDTO[]>(table_data), {
+    autoLoad: true,
+  });
+
+  console.log(data);
 
   return {
     state: {
       column_config,
-      table_data,
+      table_data: data.value || [],
     },
     action: {},
   };

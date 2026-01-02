@@ -31,7 +31,7 @@
  *   return { state, action };
  * };
  */
-export interface ViewModelContract<SysViewModelStates = object, SysViewModelAction = object> {
+export interface SysViewModelContract<SysViewModelStates = object, SysViewModelAction = object> {
   /**
    * Текущее состояние модели.
    * Содержит реактивные данные, которые отображаются в компоненте.

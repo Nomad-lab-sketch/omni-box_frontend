@@ -6,6 +6,9 @@
       "path": "../../libs/sys-shared"
     },
     {
+      "path": "../../libs/sys-core"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {
