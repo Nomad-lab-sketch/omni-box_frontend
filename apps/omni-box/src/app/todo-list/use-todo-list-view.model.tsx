@@ -1,4 +1,5 @@
 import { useSysDataSourceWithLifecycle, ViewModelContract } from '@omni-box/sys-core';
+import { SysHttpDispatcher } from '@omni-box/sys-core';
 import { TableProps, Tag } from 'antd';
 
 import { TodoListDTO } from './dto/todo-list.dto';
@@ -30,21 +31,12 @@ const column_config: TableProps<TodoListDTO>['columns'] = [
   },
 ];
 
-const table_data: TodoListDTO[] = [
-  {
-    id: crypto.randomUUID(),
-    name: 'Задача 1',
-    tags: ['1', '2'],
-  },
-  {
-    id: crypto.randomUUID(),
-    name: 'Задача 2',
-    tags: ['1', '2'],
-  },
-];
+function getData(): Promise<TodoListDTO[]> {
+  return SysHttpDispatcher.get<TodoListDTO[]>('/mock/todo-list.json');
+}
 
 export function useTodoListViewModel(): ViewModelContract<UseTodoListViewModelState> {
-  const data = useSysDataSourceWithLifecycle<TodoListDTO[]>((params) => Promise.resolve<TodoListDTO[]>(table_data), {
+  const data = useSysDataSourceWithLifecycle<TodoListDTO[]>((params) => getData(), {
     autoLoad: true,
   });
 
