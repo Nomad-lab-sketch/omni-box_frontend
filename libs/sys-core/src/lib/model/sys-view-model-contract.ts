@@ -39,7 +39,7 @@ export interface SysViewModelContract<SysViewModelStates = object, SysViewModelA
    *
    * @readonly
    */
-  readonly state: SysViewModelStates;
+  readonly state: Readonly<SysViewModelStates>;
 
   /**
    * Набор действий (методов) для взаимодействия с моделью.
@@ -49,18 +49,4 @@ export interface SysViewModelContract<SysViewModelStates = object, SysViewModelA
    * @readonly
    */
   readonly action: SysViewModelAction;
-
-  /**
-   * Опциональный метод для очистки ресурсов модели.
-   * Вызывается при размонтировании компонента для отписки от событий,
-   * отмены запросов, очистки таймеров и других побочных эффектов.
-   *
-   * @example
-   * dispose: () => {
-   *   clearInterval(timerId);
-   *   subscription.unsubscribe();
-   *   abortController.abort();
-   * }
-   */
-  dispose?: () => void | null;
 }

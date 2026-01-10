@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef,useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useRef, useSyncExternalStore } from 'react';
 
 import { FetchFn, SysDataSourceOptions } from '../model/sys-data-source-contract';
 import { SysDataSource } from './data-sources/sys-data-source';
@@ -19,7 +19,7 @@ export function useSysDataSource<T = unknown>(fetchFn: FetchFn<T>, options?: Sys
     sysDataSource.getSnapshot.bind(sysDataSource)
   );
 
-  return dataSource;
+  return { dataSource, sysDataSource };
 }
 
 /**
@@ -50,5 +50,5 @@ export function useSysDataSourceWithLifecycle<T = unknown>(_fetchFn: FetchFn<T>,
     };
   }, [sysDataSource]);
 
-  return dataSource;
+  return { dataSource, sysDataSource };
 }

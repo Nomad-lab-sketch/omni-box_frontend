@@ -1,52 +1,53 @@
 import { useSysDataSourceWithLifecycle, ViewModelContract } from '@omni-box/sys-core';
 import { SysHttpDispatcher } from '@omni-box/sys-core';
-import { TableProps, Tag } from 'antd';
+import { useState } from 'react';
 
 import { TodoListDTO } from './dto/todo-list.dto';
 
-export interface UseTodoListViewModelState {
-  column_config: TableProps<TodoListDTO>['columns'];
-  table_data: TodoListDTO[];
+interface UseTodoListViewModelState {
+  todoList: TodoListDTO[];
+  isModalOpen: boolean;
 }
 
-const column_config: TableProps<TodoListDTO>['columns'] = [
-  {
-    key: 'name',
-    dataIndex: 'name',
-    title: 'Задача',
-  },
-  {
-    key: 'tags',
-    dataIndex: 'tags',
-    title: 'Теги',
-    render: (_, { id, tags }) => {
-      return (
-        <div className="flex gap-1">
-          {tags.map((t) => (
-            <Tag key={id + t}>{t}</Tag>
-          ))}
-        </div>
-      );
-    },
-  },
-];
-
-function getData(): Promise<TodoListDTO[]> {
-  return SysHttpDispatcher.get<TodoListDTO[]>('/mock/todo-list.json');
+interface UseTodoListViewModelAction {
+  openAddTodoModal: () => void;
+  cancelAddTodoModal: () => void;
+  addTodo: () => void;
+  deleteTodo: (todoIds: string) => void;
 }
 
-export function useTodoListViewModel(): ViewModelContract<UseTodoListViewModelState> {
-  const data = useSysDataSourceWithLifecycle<TodoListDTO[]>((params) => getData(), {
+export function useTodoListViewModel(): ViewModelContract<UseTodoListViewModelState, UseTodoListViewModelAction> {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const { dataSource, sysDataSource } = useSysDataSourceWithLifecycle<TodoListDTO[]>((params) => getTodoList(), {
     autoLoad: true,
   });
 
-  console.log(data);
+  const openAddTodoModal: UseTodoListViewModelAction['openAddTodoModal'] = (): void => {
+    setIsModalOpen(true);
+  };
+
+  const cancelAddTodoModal: UseTodoListViewModelAction['cancelAddTodoModal'] = (): void => {
+    setIsModalOpen(false);
+  };
+
+  const addTodo: UseTodoListViewModelAction['addTodo'] = (): void => {
+    setIsModalOpen(true);
+  };
+
+  const deleteTodo: UseTodoListViewModelAction['deleteTodo'] = (todoId: string): void => {
+    sysDataSource.updateValue(dataSource.value?.filter((todo) => todo.id !== todoId) || []);
+  };
 
   return {
     state: {
-      column_config,
-      table_data: data.value || [],
+      todoList: dataSource.value || [],
+      isModalOpen,
     },
-    action: {},
+    action: { openAddTodoModal, cancelAddTodoModal, addTodo, deleteTodo },
   };
+}
+
+function getTodoList(): Promise<TodoListDTO[]> {
+  return SysHttpDispatcher.get<TodoListDTO[]>('/mock/todo-list.json');
 }

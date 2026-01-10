@@ -5,6 +5,7 @@ import {
   SysDataSourceOptions,
   UseSyncExternalStore,
 } from '../../model/sys-data-source-contract';
+import { SysHttpError } from '../../model/sys-http-error';
 import { SysHttpDispatcher } from '../sys-http-dispatcher';
 import { SysDataStateContract } from './../../model/sys-data-state-contract';
 import { SysDataState } from './sys-data-state';
@@ -172,6 +173,33 @@ export class SysDataSource<T = unknown> implements SysDataSourceContract<T> {
    */
   public stopAutoRefresh(): void {
     this._stopRefreshTimer();
+  }
+
+  /**
+   * Обновляет значение данных напрямую, без загрузки.
+   * @param value Новое значение данных.
+   */
+  public updateValue(value: T): void {
+    this._state.value = value;
+    this.emitChange();
+  }
+
+  /**
+   * Обновляет ошибку напрямую, без загрузки.
+   * @param error Новая ошибка.
+   */
+  public updateError(error: SysHttpError | null): void {
+    this._state.error = error;
+    this.emitChange();
+  }
+
+  /**
+   * Обновляет флаг загрузки напрямую, без загрузки.
+   * @param loading Новый флаг загрузки.
+   */
+  public updateLoading(loading: boolean): void {
+    this._state.loading = loading;
+    this.emitChange();
   }
 
   /**
