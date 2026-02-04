@@ -12,17 +12,22 @@ const { Header, Content, Footer, Sider } = Layout;
 const items: Required<MenuProps>['items'][number][] = [
   {
     key: `/${RouterPaths.TODO_LIST}`,
-    label: <Link to={RouterPaths.TODO_LIST}>Список задач</Link>,
+    label: <Link to={RouterPaths.TODO_LIST}>{ROUTER_PATH_LABELS['todo-list']}</Link>,
     icon: <PieChartOutlined />,
   },
   {
     key: `/${RouterPaths.HELL_HOUND}`,
-    label: <Link to={RouterPaths.HELL_HOUND}>Цербер</Link>,
+    label: <Link to={RouterPaths.HELL_HOUND}>{ROUTER_PATH_LABELS['hell-hound']}</Link>,
     icon: <PieChartOutlined />,
   },
   {
     key: `/${RouterPaths.AAMN}`,
-    label: <Link to={RouterPaths.AAMN}>Распределенная адаптивная сеть памяти</Link>,
+    label: <Link to={RouterPaths.AAMN}>{ROUTER_PATH_LABELS['aamn']}</Link>,
+    icon: <PieChartOutlined />,
+  },
+  {
+    key: `/${RouterPaths.FRAMEWORK}`,
+    label: <Link to={RouterPaths.FRAMEWORK}>{ROUTER_PATH_LABELS['framework']}</Link>,
     icon: <PieChartOutlined />,
   },
 ];
@@ -70,7 +75,7 @@ export function OmniLayoutComponent(): React.JSX.Element {
         </Link>
         <Menu theme="dark" items={items} selectedKeys={[location.pathname]} />
       </Sider>
-      <Layout className='flex flex-col gap-2'>
+      <Layout className="flex flex-col gap-2">
         <Header className="p-0 pl-4 pr-4">
           <Button
             className="h-full text-base"

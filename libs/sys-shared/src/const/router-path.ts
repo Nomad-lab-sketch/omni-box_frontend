@@ -3,6 +3,7 @@ export enum RouterPaths {
   TODO_LIST = 'todo-list',
   HELL_HOUND = 'hell-hound',
   AAMN = 'aamn',
+  FRAMEWORK = 'framework',
 }
 
 export const ROUTER_PATH_LABELS: Record<RouterPaths, string> = {
@@ -10,4 +11,5 @@ export const ROUTER_PATH_LABELS: Record<RouterPaths, string> = {
   [RouterPaths.TODO_LIST]: 'Список задач',
   [RouterPaths.HELL_HOUND]: 'Цербер',
   [RouterPaths.AAMN]: 'Распределенная адаптивная сеть памяти',
+  [RouterPaths.FRAMEWORK]: 'Фреймворк',
 };

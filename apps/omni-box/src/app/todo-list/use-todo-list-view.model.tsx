@@ -1,22 +1,39 @@
 import { useSysDataSourceWithLifecycle, ViewModelContract } from '@omni-box/sys-core';
 import { SysHttpDispatcher } from '@omni-box/sys-core';
 import { useState } from 'react';
+import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form';
 
 import { TodoListDTO } from './dto/todo-list.dto';
 
 interface UseTodoListViewModelState {
+  fieldErrors: FieldErrors<CreationTaskForm>;
   todoList: TodoListDTO[];
   isModalOpen: boolean;
 }
 
 interface UseTodoListViewModelAction {
+  register: UseFormRegister<CreationTaskForm>;
   openAddTodoModal: () => void;
   cancelAddTodoModal: () => void;
   addTodo: () => void;
   deleteTodo: (todoIds: string) => void;
 }
 
+interface CreationTaskForm {
+  name: string;
+  statusTask: string;
+  priority: string;
+  tags: string[];
+  executor: string;
+}
+
 export function useTodoListViewModel(): ViewModelContract<UseTodoListViewModelState, UseTodoListViewModelAction> {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreationTaskForm>();
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { dataSource, sysDataSource } = useSysDataSourceWithLifecycle<TodoListDTO[]>((params) => getTodoList(), {
@@ -31,8 +48,13 @@ export function useTodoListViewModel(): ViewModelContract<UseTodoListViewModelSt
     setIsModalOpen(false);
   };
 
-  const addTodo: UseTodoListViewModelAction['addTodo'] = (): void => {
-    setIsModalOpen(true);
+  const onSubmit: SubmitHandler<CreationTaskForm> = (data) => console.log(data);
+
+  const addTodo: UseTodoListViewModelAction['addTodo'] = async (): Promise<void> => {
+    if (Object.keys(errors).length === 0) {
+      await handleSubmit(onSubmit);
+      setIsModalOpen(false);
+    }
   };
 
   const deleteTodo: UseTodoListViewModelAction['deleteTodo'] = (todoId: string): void => {
@@ -41,10 +63,11 @@ export function useTodoListViewModel(): ViewModelContract<UseTodoListViewModelSt
 
   return {
     state: {
+      fieldErrors: errors,
       todoList: dataSource.value || [],
       isModalOpen,
     },
-    action: { openAddTodoModal, cancelAddTodoModal, addTodo, deleteTodo },
+    action: { register, openAddTodoModal, cancelAddTodoModal, addTodo, deleteTodo },
   };
 }
 

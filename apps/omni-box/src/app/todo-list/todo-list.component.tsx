@@ -2,7 +2,7 @@ import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { RouterPaths } from '@omni-box/sys-shared';
 import { Badge, Button, Input, Modal, Progress, Table, TableProps, Tag, Tooltip } from 'antd';
 import * as React from 'react';
-import { RouteObject } from 'react-router-dom';
+import { Link, RouteObject } from 'react-router-dom';
 
 import { TodoListDTO } from './dto/todo-list.dto';
 import { useTodoListViewModel } from './use-todo-list-view.model';
@@ -37,7 +37,7 @@ function TodoListComponent(): React.JSX.Element {
     {
       key: 'priority',
       dataIndex: 'priority',
-      title: 'Статус приоритета',
+      title: 'Приоритет',
     },
     {
       key: 'tags',
@@ -59,6 +59,13 @@ function TodoListComponent(): React.JSX.Element {
       key: 'executor',
       dataIndex: 'executor',
       title: 'Исполнитель',
+      render: (_, { executor }) => {
+        return (
+          <Link to="#" className="text-blue-400 underline">
+            {executor}
+          </Link>
+        );
+      },
     },
     {
       key: 'due_date',
@@ -100,9 +107,13 @@ function TodoListComponent(): React.JSX.Element {
       </div>
 
       <Modal title="Новое задание" open={state.isModalOpen} onOk={action.addTodo} onCancel={action.cancelAddTodoModal}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <div className="flex flex-col gap-2 mt-5">
+          <Input placeholder="Название задачи" {...action.register('name')} />
+          <Input placeholder="Статус задачи" {...action.register('statusTask')} />
+          <Input placeholder="Приоритет" {...action.register('priority')} />
+          <Input placeholder="Теги" {...action.register('tags')} />
+          <Input placeholder="Исполнитель" {...action.register('executor')} />
+        </div>
       </Modal>
     </>
   );
