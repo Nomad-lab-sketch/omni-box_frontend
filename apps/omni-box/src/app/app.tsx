@@ -1,29 +1,9 @@
 import { SysCoreConfig } from '@omni-box/sys-core';
-import { OmniLayoutComponent, RouterPaths, TOKEN } from '@omni-box/sys-shared';
-import { ConfigProvider, theme, ThemeConfig } from 'antd';
+import { OmniLayoutComponent, ROUTER_PATH_LABELS, RouterItem, RouterPaths } from '@omni-box/sys-shared';
 import { createContext } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Link, RouterProvider } from 'react-router-dom';
 
 import { mainRoute } from './main/main.component';
-import { todoListRoute } from './todo-list/todo-list.component';
-
-const themeConfig: ThemeConfig = {
-  token: TOKEN,
-  algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
-  components: {
-    Layout: {
-      triggerBg: TOKEN.colorBgContainer,
-      siderBg: TOKEN.colorBgBase,
-      headerBg: TOKEN.colorBgBase,
-    },
-
-    Menu: {
-      darkItemBg: TOKEN.colorBgBase,
-      darkSubMenuItemBg: TOKEN.colorBgContainer,
-      subMenuItemBg: TOKEN.colorBgContainer,
-    },
-  },
-};
 
 const env = {
   buildTarget: import.meta.env.VITE_APP_BUILD_TARGET,
@@ -40,19 +20,60 @@ const sysCoreConfig = new SysCoreConfig({
 
 const SysCoreConfigContext = createContext(sysCoreConfig);
 
+const items: RouterItem[] = [
+  {
+    path: `/${RouterPaths.TODO_LIST}`,
+    label: (
+      <Link className="text-blue-600" to={RouterPaths.TODO_LIST}>
+        {ROUTER_PATH_LABELS['todo-list']}
+      </Link>
+    ),
+  },
+  {
+    path: `/${RouterPaths.HELL_HOUND}`,
+    label: (
+      <Link className="text-blue-600" to={RouterPaths.HELL_HOUND}>
+        {ROUTER_PATH_LABELS['hell-hound']}
+      </Link>
+    ),
+  },
+  {
+    path: `/${RouterPaths.AAMN}`,
+    label: (
+      <Link className="text-blue-600" to={RouterPaths.AAMN}>
+        {ROUTER_PATH_LABELS['aamn']}
+      </Link>
+    ),
+  },
+  {
+    path: `/${RouterPaths.FRAMEWORK}`,
+    label: (
+      <Link className="text-blue-600" to={RouterPaths.FRAMEWORK}>
+        {ROUTER_PATH_LABELS['framework']}
+      </Link>
+    ),
+  },
+  {
+    path: `/${RouterPaths.DRAW}`,
+    label: (
+      <Link className="text-blue-600" to={RouterPaths.DRAW}>
+        {ROUTER_PATH_LABELS['draw']}
+      </Link>
+    ),
+  },
+];
+
 const router = createBrowserRouter([
   {
     path: RouterPaths.MAIN,
     Component: () => {
       return (
         <SysCoreConfigContext.Provider value={sysCoreConfig}>
-          <ConfigProvider theme={themeConfig}>
-            <OmniLayoutComponent />
-          </ConfigProvider>
+          <OmniLayoutComponent routes={items} />
         </SysCoreConfigContext.Provider>
       );
     },
-    children: [mainRoute, todoListRoute],
+    children: [mainRoute],
   },
 ]);
 

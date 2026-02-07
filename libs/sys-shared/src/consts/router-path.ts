@@ -4,6 +4,7 @@ export enum RouterPaths {
   HELL_HOUND = 'hell-hound',
   AAMN = 'aamn',
   FRAMEWORK = 'framework',
+  DRAW = 'draw',
 }
 
 export const ROUTER_PATH_LABELS: Record<RouterPaths, string> = {
@@ -12,4 +13,5 @@ export const ROUTER_PATH_LABELS: Record<RouterPaths, string> = {
   [RouterPaths.HELL_HOUND]: 'Цербер',
   [RouterPaths.AAMN]: 'Распределенная адаптивная сеть памяти',
   [RouterPaths.FRAMEWORK]: 'Фреймворк',
+  [RouterPaths.DRAW]: 'Рисовальня',
 };
