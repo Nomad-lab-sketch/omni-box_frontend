@@ -9,6 +9,9 @@
       "path": "../../libs/sys-core"
     },
     {
+      "path": "../../libs/draw"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {

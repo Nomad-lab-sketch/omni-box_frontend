@@ -1,7 +1,8 @@
 import { RouterPaths } from '@omni-box/sys-shared';
 import { RouteObject } from 'react-router-dom';
 
-import styles from './draw.module.scss';
+import styles from './omni-box-draw.module.scss';
+import { useOmniBoxDrawViewModel } from './omni-box-draw.viewModel';
 
 export const omniBoxDrawRoute: RouteObject = {
   path: RouterPaths.DRAW,
@@ -9,11 +10,13 @@ export const omniBoxDrawRoute: RouteObject = {
 };
 
 export function OmniBoxDraw() {
+  const { state, action } = useOmniBoxDrawViewModel();
+
   return (
     <div className={styles['container']}>
-      <h1>Welcome to OmniBoxDraw!</h1>
-
-      <canvas width={'100%'} height={'100%'} />
+      <div className={styles['canvas-wrapper']}>
+        <canvas className={styles['canvas-root']} ref={state.canvasRef} />
+      </div>
     </div>
   );
 }

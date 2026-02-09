@@ -31,6 +31,9 @@
     },
     {
       "path": "../../libs/sys-core/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/draw/tsconfig.lib.json"
     }
   ]
 }

@@ -1,1 +1,1 @@
-export * from './lib/draw';
+export { omniBoxDrawRoute } from './lib/omni-box-draw';
