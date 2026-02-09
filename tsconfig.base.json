@@ -28,6 +28,9 @@
             ],
             "@omni-box/sys-shared*": [
                 "libs/sys-shared/src/*"
+            ],
+            "@omni-box/draw*": [
+                "libs/draw/src/*"
             ]
         },
     }

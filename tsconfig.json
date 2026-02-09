@@ -11,6 +11,9 @@
     },
     {
       "path": "./libs/sys-shared"
+    },
+    {
+      "path": "./libs/draw"
     }
   ]
 }

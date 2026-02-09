@@ -1,3 +1,4 @@
+import { omniBoxDrawRoute } from '@omni-box/draw';
 import { SysCoreConfig } from '@omni-box/sys-core';
 import { OmniLayoutComponent, ROUTER_PATH_LABELS, RouterItem, RouterPaths } from '@omni-box/sys-shared';
 import { createContext } from 'react';
@@ -73,7 +74,7 @@ const router = createBrowserRouter([
         </SysCoreConfigContext.Provider>
       );
     },
-    children: [mainRoute],
+    children: [mainRoute, omniBoxDrawRoute],
   },
 ]);
 
