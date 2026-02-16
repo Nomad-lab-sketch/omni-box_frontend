@@ -24,15 +24,15 @@
             "@omni-box/source"
         ],
         "paths": {
-            "@omni-box/sys-core*": [
-                "libs/sys-core/src/*"
+            "@omni-box/sys-core": [
+                "libs/sys-core/src/index.ts"
             ],
-            "@omni-box/sys-shared*": [
-                "libs/sys-shared/src/*"
+            "@omni-box/sys-shared": [
+                "libs/sys-shared/src/index.ts"
             ],
-            "@omni-box/draw*": [
-                "libs/draw/src/*"
+            "@omni-box/draw": [
+                "libs/draw/src/index.ts"
             ]
-        },
+        }
     }
 }

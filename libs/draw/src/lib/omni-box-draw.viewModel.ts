@@ -3,6 +3,7 @@ import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 interface UseOmniBoxDrawViewModelState {
   canvasRef: RefObject<HTMLCanvasElement | null>;
+  canvasWrapperRef: RefObject<HTMLDivElement | null>;
 }
 
 interface Coordinate {
@@ -12,6 +13,7 @@ interface Coordinate {
 
 export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewModelState> {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasWrapperRef = useRef<HTMLDivElement>(null);
 
   const [isPainting, setIsPainting] = useState<boolean>(false);
 
@@ -76,6 +78,21 @@ export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewM
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    const canvasWrapper = canvasWrapperRef.current;
+
+    if (canvas && canvasWrapper) {
+      const sizes = canvasWrapper.getBoundingClientRect();
+
+      canvas.width = sizes.width;
+      canvas.height = sizes.height;
+    }
+  }, []);
+
+  /**
+   * Старт рисования
+   */
+  useEffect(() => {
+    const canvas = canvasRef.current;
 
     if (!canvas) return void 0;
 
@@ -86,6 +103,9 @@ export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewM
     };
   }, [startPaint]);
 
+  /**
+   * Режим рисования
+   */
   useEffect(() => {
     if (!canvasRef.current) {
       return;
@@ -97,6 +117,9 @@ export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewM
     };
   }, [paint]);
 
+  /**
+   * Выходим из paint режима
+   */
   useEffect(() => {
     if (!canvasRef.current) {
       return;
@@ -112,6 +135,6 @@ export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewM
 
   return {
     action: {},
-    state: { canvasRef },
+    state: { canvasRef, canvasWrapperRef },
   };
 }

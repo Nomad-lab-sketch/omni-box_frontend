@@ -14,8 +14,8 @@ export function OmniBoxDraw() {
 
   return (
     <div className={styles['container']}>
-      <div className={styles['canvas-wrapper']}>
-        <canvas className={styles['canvas-root']} ref={state.canvasRef} />
+      <div className={styles['canvas-wrapper']} ref={state.canvasWrapperRef}>
+        <canvas ref={state.canvasRef} />
       </div>
     </div>
   );
