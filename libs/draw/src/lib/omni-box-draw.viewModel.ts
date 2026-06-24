@@ -1,9 +1,14 @@
 import { ViewModelContract } from '@omni-box/sys-core';
-import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 interface UseOmniBoxDrawViewModelState {
   canvasRef: RefObject<HTMLCanvasElement | null>;
   canvasWrapperRef: RefObject<HTMLDivElement | null>;
+  color: string;
+}
+
+interface UseOmniBoxDrawViewModelAction {
+  changeColor: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface Coordinate {
@@ -11,13 +16,24 @@ interface Coordinate {
   y: number;
 }
 
-export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewModelState> {
+export function useOmniBoxDrawViewModel(): ViewModelContract<
+  UseOmniBoxDrawViewModelState,
+  UseOmniBoxDrawViewModelAction
+> {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
 
   const [isPainting, setIsPainting] = useState<boolean>(false);
 
   const [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined);
+
+  const [color, setColor] = useState<string>('#000000');
+
+  const changeColor = (event: ChangeEvent<HTMLInputElement>) => {
+    setColor(event.target.value);
+
+    throw new Error('unhandle error');
+  };
 
   const getCoordinates = (event: MouseEvent): Coordinate | undefined => {
     if (!canvasRef.current) {
@@ -29,6 +45,26 @@ export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewM
       x: event.pageX - canvas.offsetLeft,
       y: event.pageY - canvas.offsetTop,
     };
+  };
+
+  const drawLine = (originalMousePosition: Coordinate, newMousePosition: Coordinate) => {
+    if (!canvasRef.current) {
+      return;
+    }
+    const canvas: HTMLCanvasElement = canvasRef.current;
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.strokeStyle = color;
+      context.lineJoin = 'round';
+      context.lineWidth = 5;
+
+      context.beginPath();
+      context.moveTo(originalMousePosition.x, originalMousePosition.y);
+      context.lineTo(newMousePosition.x, newMousePosition.y);
+      context.closePath();
+
+      context.stroke();
+    }
   };
 
   const startPaint = useCallback((event: MouseEvent) => {
@@ -52,26 +88,6 @@ export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewM
     [isPainting, mousePosition]
   );
 
-  const drawLine = (originalMousePosition: Coordinate, newMousePosition: Coordinate) => {
-    if (!canvasRef.current) {
-      return;
-    }
-    const canvas: HTMLCanvasElement = canvasRef.current;
-    const context = canvas.getContext('2d');
-    if (context) {
-      context.strokeStyle = 'red';
-      context.lineJoin = 'round';
-      context.lineWidth = 5;
-
-      context.beginPath();
-      context.moveTo(originalMousePosition.x, originalMousePosition.y);
-      context.lineTo(newMousePosition.x, newMousePosition.y);
-      context.closePath();
-
-      context.stroke();
-    }
-  };
-
   const exitPaint = useCallback(() => {
     setIsPainting(false);
   }, []);
@@ -81,11 +97,26 @@ export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewM
     const canvasWrapper = canvasWrapperRef.current;
 
     if (canvas && canvasWrapper) {
-      const sizes = canvasWrapper.getBoundingClientRect();
+      const resizeObserver = new ResizeObserver((entries) => {
+        const entry = entries[0];
 
-      canvas.width = sizes.width;
-      canvas.height = sizes.height;
+        if (entry) {
+          const { width, height } = entry.contentRect;
+
+          canvas.width = width;
+          canvas.height = height;
+        }
+      });
+
+      resizeObserver.observe(canvasWrapper);
+
+      return () => {
+        resizeObserver.unobserve(canvasWrapper);
+        resizeObserver.disconnect();
+      };
     }
+
+    return void 0;
   }, []);
 
   /**
@@ -134,7 +165,7 @@ export function useOmniBoxDrawViewModel(): ViewModelContract<UseOmniBoxDrawViewM
   }, [exitPaint]);
 
   return {
-    action: {},
-    state: { canvasRef, canvasWrapperRef },
+    action: { changeColor },
+    state: { canvasRef, canvasWrapperRef, color },
   };
 }

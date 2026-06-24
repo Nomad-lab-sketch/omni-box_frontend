@@ -49,6 +49,11 @@ export class SysDataSource<T = unknown> implements SysDataSourceContract<T> {
    */
   private _refreshIntervalTimer: ReturnType<typeof setInterval> | null = null;
 
+  /**
+   * Контроллер для отмены запроса.
+   */
+  private _abortController: AbortController | null = null;
+
   /** Список слушателей изменений состояния данных */
   public listeners: Parameters<UseSyncExternalStore<SysDataStateContract<T>>['subscribe']>[0][] = [];
 
@@ -68,9 +73,11 @@ export class SysDataSource<T = unknown> implements SysDataSourceContract<T> {
     this._fetchFn = fetchFn;
     this._options = options;
 
-    if (options?.autoLoad) {
-      this.load(options?.params);
+    // Отменяем предыдущий незавершенный запрос
+    if (this._abortController) {
+      this._abortController.abort();
     }
+    this._abortController = new AbortController();
 
     this._startRefreshTimer();
   }

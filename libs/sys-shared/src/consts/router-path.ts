@@ -5,6 +5,7 @@ export enum RouterPaths {
   AAMN = 'aamn',
   FRAMEWORK = 'framework',
   DRAW = 'draw',
+  EDITOR = 'editor',
 }
 
 export const ROUTER_PATH_LABELS: Record<RouterPaths, string> = {
@@ -14,4 +15,5 @@ export const ROUTER_PATH_LABELS: Record<RouterPaths, string> = {
   [RouterPaths.AAMN]: 'Распределенная адаптивная сеть памяти',
   [RouterPaths.FRAMEWORK]: 'Фреймворк',
   [RouterPaths.DRAW]: 'Рисовальня',
+  [RouterPaths.EDITOR]: 'Редактор',
 };

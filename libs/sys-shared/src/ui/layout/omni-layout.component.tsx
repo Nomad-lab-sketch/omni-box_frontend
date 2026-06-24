@@ -13,18 +13,13 @@ export function OmniLayoutComponent(props: OmniLayoutProps): React.JSX.Element {
       {/* Шапка с навигацией */}
       <div className="flex items-center gap-8 p-4 border-b border-gray-200 bg-white shadow-sm">
         {props.routes.map((item) => (
-          <a
-            key={item.path}
-            href={item.path}
-            className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium"
-          >
-            {item.label}
-          </a>
+          <div key={item.path}>{item.linkElement}</div>
         ))}
       </div>
 
       {/* Основной контент - займет всё доступное пространство */}
-      <div className="flex-grow p-4 md:p-6">
+      {/* Сделаем контейнер flex column, чтобы дочерние рендеры Outlet могли использовать flex:1 */}
+      <div className="flex-grow p-4 md:p-6 flex flex-col min-h-0">
         <Outlet />
       </div>
 

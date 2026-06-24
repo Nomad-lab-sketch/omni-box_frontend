@@ -8,19 +8,35 @@ import { SysAppError } from './sys-app-error';
  * @publicApi
  */
 export class SysHttpError extends SysAppError {
-  /** HTTP-статус код (например, 404, 500) */
-  private _status!: number;
+  /**
+   * HTTP-статус код (например, 404, 500)
+   * @type {number}
+   * @default 0
+   */
+  private _status = 0;
 
-  /** Текст статуса (например, "Not Found", "Internal Server Error") */
+  /**
+   * Текст статуса (например, "Not Found", "Internal Server Error")
+   * @type {string}
+   */
   private _statusText!: string;
 
-  /** URL, по которому был сделан запрос */
+  /**
+   * URL, по которому был сделан запрос
+   * @type {string}
+   */
   private _url?: string;
 
-  /** Содержимое тела ответа с ошибкой */
+  /**
+   * Содержимое тела ответа с ошибкой
+   * @type {any}
+   */
   private _errorBody?: any;
 
-  /** Временная метка, когда произошла ошибка */
+  /**
+   * Временная метка, когда произошла ошибка
+   * @type {Date}
+   */
   private _timestamp: Date = new Date();
 
   constructor() {

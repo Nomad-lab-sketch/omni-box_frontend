@@ -22,7 +22,7 @@ export class SysCoreConfig {
    *  @name errorRoute
    *  @type {string}
    */
-  public errorRoute: string;
+  public errorRoute?: string;
 
   /**
    *  Создает инстанс конфигурации ядра.

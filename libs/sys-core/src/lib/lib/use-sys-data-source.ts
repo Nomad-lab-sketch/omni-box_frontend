@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 
 import { FetchFn, SysDataSourceOptions } from '../model/sys-data-source-contract';
+import { SysDataStateContract } from '../model/sys-data-state-contract';
 import { SysDataSource } from './data-sources/sys-data-source';
 
 /**
@@ -29,21 +30,26 @@ export function useSysDataSource<T = unknown>(fetchFn: FetchFn<T>, options?: Sys
  * @param options  Опции DataSource
  * @returns Текущее состояние DataSource
  */
-export function useSysDataSourceWithLifecycle<T = unknown>(_fetchFn: FetchFn<T>, _options?: SysDataSourceOptions<T>) {
-  const dataSourceRef = useRef<SysDataSource<T> | null>(null);
+export function useSysDataSourceWithLifecycle<T = unknown>(fetchFn: FetchFn<T>, options?: SysDataSourceOptions<T>) {
+  // Стабильная ссылка на опции, чтобы не пересоздавать/не спамить эффекты
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
 
-  if (!dataSourceRef.current) {
-    dataSourceRef.current = new SysDataSource<T>(_fetchFn, _options);
-  }
-
-  const sysDataSource = dataSourceRef.current;
+  const [sysDataSource] = useState(() => new SysDataSource<T>(fetchFn, options));
 
   const dataSource = useSyncExternalStore(
     sysDataSource.subscribe.bind(sysDataSource),
     sysDataSource.getSnapshot.bind(sysDataSource)
   );
 
-  // Очистка ресурса при размонтировании компонента
+  // Эффект для автозапуска
+  useEffect(() => {
+    if (optionsRef.current?.autoLoad) {
+      sysDataSource.load(optionsRef.current?.params);
+    }
+  }, [sysDataSource]);
+
+  // Эффект для очистки при размонтировании
   useEffect(() => {
     return () => {
       sysDataSource.destroy();
@@ -51,4 +57,22 @@ export function useSysDataSourceWithLifecycle<T = unknown>(_fetchFn: FetchFn<T>,
   }, [sysDataSource]);
 
   return { dataSource, sysDataSource };
+}
+
+/**
+ * Хук для выборки данных из SysDataSource с использованием селектора.
+ * @param sysDataSource
+ * @param selector
+ * @returns
+ */
+export function useSysDataSourceSelector<T = unknown, Slice = unknown>(
+  sysDataSource: SysDataSource<T>,
+  selector: (snapshot: Omit<SysDataStateContract<T>, 'reset' | 'destroy'>) => Slice
+): Slice {
+  return useSyncExternalStore(
+    sysDataSource.subscribe.bind(sysDataSource),
+    () => selector(sysDataSource.getSnapshot()),
+    // Серверный снимок (опционально для SSR)
+    () => selector(sysDataSource.getSnapshot())
+  );
 }

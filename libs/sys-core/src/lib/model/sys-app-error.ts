@@ -4,7 +4,7 @@
  *
  *  @publicApi
  */
-export class SysAppError {
+export class SysAppError extends Error {
   /**
    *  Наименование класса объекта ошибки.
    *  @name _name
@@ -42,6 +42,8 @@ export class SysAppError {
   protected _isFatal!: boolean;
 
   constructor(message?: string) {
+    super(message);
+
     this._message = message;
   }
 
@@ -50,7 +52,7 @@ export class SysAppError {
    * @public
    * @return {string} - наименование класса ошибки.
    */
-  get name(): string {
+  override get name(): string {
     return this._name;
   }
 
@@ -59,7 +61,7 @@ export class SysAppError {
    * @public
    * @param {string} value - строка с наименованием класса ошибки.
    */
-  set name(value: string) {
+  override set name(value: string) {
     this._name = value;
   }
 
@@ -68,8 +70,8 @@ export class SysAppError {
    * @public
    * @return {string} - текст ошибки.
    */
-  get message(): string | undefined {
-    return this._message;
+  override get message(): string {
+    return this._message || '';
   }
 
   /**
@@ -77,7 +79,7 @@ export class SysAppError {
    * @public
    * @param {string} value - строка с текстом ошибки.
    */
-  set message(value: string) {
+  override set message(value: string) {
     this._message = value;
   }
 
